@@ -18,9 +18,10 @@ TOTAL_HEIGHT = HEIGHT + 2 * EDGE
 CENTER_X = TOTAL_WIDTH / 2
 
 FUEL_SOURCE_MIN = 20.0
-FUEL_SOURCE_MAX = 25.0
+FUEL_SOURCE_MAX = 45.0
+FUEL_SOURCE_VAR = 1.0
 TEMP_SOURCE = 0.1
-FUEL_BURN_RATE = 0.2
+FUEL_BURN_RATE = 0.10
 FUEL_EXHAUST_RATIO = 1.5
 TEMP_RATIO = 10.0
 
@@ -29,11 +30,11 @@ GRAVITY = 0.1
 FUEL_MASS = 0.5
 EXHAUST_MASS = 1.0
 
-BUOYANCY = 0.1
+BUOYANCY = 0.06
 
 THRESH_TEMP = 0.8
 
-EXPANSION_AMT = 0.1
+EXPANSION_AMT = 0.01
 
 FUEL_DISSIPATION = 0.05
 EXHAUST_DISSIPATION = 0.1
@@ -58,6 +59,7 @@ class CandLED(object):
         self.temp_field = self._get_matrix(TOTAL_WIDTH, TOTAL_HEIGHT, default=lambda: 1.6)
         self.exhaust_field = self._get_matrix(TOTAL_WIDTH, TOTAL_HEIGHT)
         self.vel_field = self._get_matrix(TOTAL_WIDTH, TOTAL_HEIGHT, default=lambda: Velocity())
+        self.fuel_source = float(FUEL_SOURCE_MAX + FUEL_SOURCE_MIN) / 2
 
     @staticmethod
     def _get_matrix(width, height, default=None):
@@ -124,8 +126,9 @@ class CandLED(object):
                     temp_comb = combustion * FUEL_EXHAUST_RATIO * TEMP_RATIO
 
                 # Sources
-                fuel_source = random.uniform(FUEL_SOURCE_MIN, FUEL_SOURCE_MAX)\
-                    if x == CENTER_X and y == TOTAL_HEIGHT - EDGE - 1 else 0
+                fuel_source = self.fuel_source if x == CENTER_X and y == TOTAL_HEIGHT - EDGE - 1 else 0
+                self.fuel_source = max(FUEL_SOURCE_MIN, min(FUEL_SOURCE_MAX, self.fuel_source + random.uniform(-FUEL_SOURCE_VAR, FUEL_SOURCE_VAR)))
+                random.uniform(FUEL_SOURCE_MIN, FUEL_SOURCE_MAX)
                 temp_source = TEMP_SOURCE
 
                 # Update densities

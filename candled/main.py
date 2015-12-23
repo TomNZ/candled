@@ -7,7 +7,7 @@ PPL = 20
 frame = 0
 
 # Visualization
-MIN_TEMP = 0.1
+MIN_TEMP = 0.5
 MAX_TEMP = 2.0
 TEMP_DIFF = MAX_TEMP - MIN_TEMP
 
@@ -53,11 +53,14 @@ def tick_frame(time):
         for y in range(candled.HEIGHT):
             temp = sim.temp_field[x + candled.EDGE][y + candled.EDGE]
             norm_temp = (temp - MIN_TEMP) / TEMP_DIFF
-            color = int(min(255, max(0, norm_temp * 255)))
-            if temp > candled.THRESH_TEMP:
-                colors.extend([color, color, 0] * 6)
-            else:
-                colors.extend([color, 0, 0] * 6)
+            color = int(norm_temp * 255)
+            colors.extend(
+                [
+                    min(255, max(0, color)),
+                    min(255, max(0, color - 60)),
+                    min(255, max(0, color - 180))
+                ] * 6
+            )
 
     vertices.colors = colors
 
@@ -70,7 +73,7 @@ def main():
         window.clear()
         vertices.draw(pyglet.gl.GL_TRIANGLES)
 
-    pyglet.clock.schedule_interval(tick_frame, 1.0 / 10)
+    pyglet.clock.schedule_interval(tick_frame, 1.0 / 20)
     pyglet.app.run()
 
 
