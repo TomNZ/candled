@@ -10,15 +10,15 @@ import random
 WIDTH = 16
 HEIGHT = 32
 
-EDGE = 0
+EDGE = 2
 
 TOTAL_WIDTH = WIDTH + 2 * EDGE
 TOTAL_HEIGHT = HEIGHT + 2 * EDGE
 
-CENTER_X = TOTAL_WIDTH / 2
+CENTER_X = float(TOTAL_WIDTH - 1) / 2
 
-FUEL_SOURCE_MIN = 20.0
-FUEL_SOURCE_MAX = 45.0
+FUEL_SOURCE_MIN = 10.0
+FUEL_SOURCE_MAX = 25.0
 FUEL_SOURCE_VAR = 1.0
 TEMP_SOURCE = 0.1
 FUEL_BURN_RATE = 0.10
@@ -42,7 +42,7 @@ TEMP_DISSIPATION = 0.2
 
 FUEL_DIFFUSE_RATE = 0.2
 EXHAUST_DIFFUSE_RATE = 0.1
-TEMP_DIFFUSE_RATE = 0.3
+TEMP_DIFFUSE_RATE = 0.5
 
 
 class Velocity(object):
@@ -126,7 +126,7 @@ class CandLED(object):
                     temp_comb = combustion * FUEL_EXHAUST_RATIO * TEMP_RATIO
 
                 # Sources
-                fuel_source = self.fuel_source if x == CENTER_X and y == TOTAL_HEIGHT - EDGE - 1 else 0
+                fuel_source = self.fuel_source if x >= int(CENTER_X) and x <= int(CENTER_X) + 1 and y == TOTAL_HEIGHT - EDGE - 1 else 0
                 self.fuel_source = max(FUEL_SOURCE_MIN, min(FUEL_SOURCE_MAX, self.fuel_source + random.uniform(-FUEL_SOURCE_VAR, FUEL_SOURCE_VAR)))
                 random.uniform(FUEL_SOURCE_MIN, FUEL_SOURCE_MAX)
                 temp_source = TEMP_SOURCE
